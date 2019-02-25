@@ -53,8 +53,9 @@ class MoviesController < ApplicationController
       #flash.keep
       redirect_to movies_path(params)
     end
+    
   end
-
+  
   def new
     # default: render 'new' template
   end
