@@ -12,6 +12,20 @@ class MoviesController < ApplicationController
 
   def index
     @movies = Movie.all
+    
+    if params[:title_click]=="yes"
+      session[:title_class]="hilite"
+      session[:release_date_class]=""
+    elsif params[:release_date_click]=="yes"
+      session[:title_class]=""
+      session[:release_date_class]="hilite"
+    end
+ 
+    if session[:title_class]=="hilite"
+     @movies = @movies.all.order(:title)
+    elsif session[:release_date_class]=="hilite"
+     @movies = @movies.all.order(:release_date)
+    end
   end
 
   def new
