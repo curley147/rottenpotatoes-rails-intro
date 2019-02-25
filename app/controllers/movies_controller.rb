@@ -12,7 +12,7 @@ class MoviesController < ApplicationController
 
   def index
     @movies = Movie.all
-    
+    # colour title clicked
     if params[:title_click]=="yes"
       session[:title_class]="hilite"
       session[:release_date_class]=""
@@ -20,19 +20,20 @@ class MoviesController < ApplicationController
       session[:title_class]=""
       session[:release_date_class]="hilite"
     end
- 
+    # sorting movies in ascending
     if session[:title_class]=="hilite"
      @movies = @movies.all.order(:title)
     elsif session[:release_date_class]=="hilite"
      @movies = @movies.all.order(:release_date)
     end
     
+    # just loading records with 'rating' attribute
     @all_ratings = Movie.distinct.pluck(:rating)
-    
+    #if its not a new user - load data
     if params[:ratings]!=nil
      session[:checked]=params[:ratings]
     end
-    
+    #if its a new user check all boxes
     if session[:checked]==nil
       session[:checked]=Hash.new()
       @all_ratings.each do |rating|
@@ -42,6 +43,7 @@ class MoviesController < ApplicationController
     
     @movies = @movies.where({rating: session[:checked].keys})
     
+    # setting titles clickable and colour
     if session[:title_class]=="hilite" and params[:title_click]==nil 
       params[:title_click]="yes"
       redirect_to movies_path(params)
@@ -50,7 +52,7 @@ class MoviesController < ApplicationController
       redirect_to movies_path(params)
     elsif params[:ratings]==nil and session[:checked]!=nil
       params[:ratings]=session[:checked]
-      #flash.keep
+      flash.keep
       redirect_to movies_path(params)
     end
     
